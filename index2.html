@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命劇本：自我探索之旅</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            overflow: hidden; /* Prevent scroll bars on body */
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden; /* Ensure game container manages its overflow */
+        }
+
+        .game-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            /* Changed to justify-evenly for better vertical distribution */
+            justify-content: space-evenly; /* Adjusted for better spacing */
+            align-items: center;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+            pointer-events: none; /* Disable interaction when hidden */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .game-scene.active {
+            opacity: 1;
+            pointer-events: auto; /* Enable interaction when active */
+        }
+
+        #intro-scene {
+            background: linear-gradient(to bottom, #1a202c, #2d3748);
+        }
+
+        /* Rainbow background for ending scene */
+        #ending-scene {
+            background: linear-gradient(135deg, #ff6f61, #ffbf61, #8aff61, #61ffd1, #619bff, #d161ff); /* Vibrant rainbow gradient */
+        }
+
+        #loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #63b3ed;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dialogue-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #63b3ed;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            max-width: 80%;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(99, 179, 237, 0.5);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-button {
+            @apply px-6 py-3 rounded-full text-lg font-bold transition duration-300 ease-in-out shadow-lg;
+            background: linear-gradient(145deg, #63b3ed, #4299e1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-button:hover {
+            background: linear-gradient(145deg, #4299e1, #3182ce);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            transition: all 0.75s ease-out;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+        }
+
+        .game-button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Input and textarea styling for better contrast */
+        input[type="text"], textarea {
+            @apply bg-gray-200 rounded-lg p-3 border border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200;
+        }
+
+        /* Custom style for player name and trait input text (deep blue) */
+        #player-name,
+        #trait1,
+        #trait2,
+        #trait3,
+        #writing-area, /* Added #writing-area here */
+        #motto-input { /* Added #motto-input here */
+            color: #1e40af; /* Deep blue */
+            font-weight: bold; /* Make it stand out */
+        }
+
+        .progress-bar-container {
+            @apply w-full bg-gray-700 rounded-full h-4 relative overflow-hidden;
+        }
+
+        .progress-bar {
+            @apply h-full bg-green-500 rounded-full transition-all duration-500 ease-out;
+        }
+
+        .skill-item {
+            /* Changed background to light gray for contrast with white panel */
+            @apply bg-gray-100 p-4 rounded-lg shadow-md flex items-center justify-between transition-transform duration-300 hover:scale-105;
+            color: #1a202c; /* Ensure default text is dark for better contrast on light background */
+        }
+
+        .skill-item span {
+            @apply font-semibold;
+            /* Ensure skill names are dark by default, specific colors can override */
+            color: #1a202c;
+        }
+        
+        /* Removed .level specific background/text-color, now it inherits from its parent span */
+        .skill-item .level {
+            @apply text-xs px-2 py-1 rounded-full; /* Keep badge shape */
+            /* Text color will be set by specific color classes in HTML */
+        }
+
+        /* Specific skill name colors - these will override the span default */
+        .skill-item .text-purple-600 { color: #805AD5; } /* Dark purple */
+        .skill-item .text-green-600 { color: #38A169; } /* Dark green */
+        .skill-item .text-red-600 { color: #E53E3E; }   /* Dark red */
+        .skill-item .text-indigo-600 { color: #5A67D8; } /* Dark indigo */
+        .skill-item .text-yellow-600 { color: #D69E2E; } /* Dark yellow/orange */
+
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: #2d3748;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(99, 179, 237, 0.5);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-out;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        #threejs-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind UI elements */
+        }
+
+        /* Custom style for highlighted text in modal (now for general highlights, not specific to name/traits in welcome message) */
+        /* For the welcome message, we'll use specific inline classes */
+        /* .highlight-text {
+            color: #1e40af;
+            font-weight: bold;
+        } */
+
+        /* Achievement card new styling */
+        .achievement-card-vibrant {
+            background: linear-gradient(to bottom right, #34d399, #06b6d4); /* from-emerald-400 to-sky-500 */
+            color: white; /* Text color for vibrant background */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-out;
+        }
+        .achievement-card-vibrant:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p class="ml-4 text-white text-xl">載入中...</p>
+    </div>
+
+    <div id="game-container" class="relative w-full h-screen">
+        <canvas id="threejs-canvas"></canvas>
+
+        <div id="intro-scene" class="game-scene active z-10">
+            <h1 class="text-5xl font-bold text-white mb-8 animate-pulse">《生命劇本：自我探索之旅》</h1>
+            <div class="dialogue-box w-3/4 md:w-1/2 lg:w-1/3 max-h-[calc(100vh-8rem)] overflow-y-auto py-8">
+                <p class="text-xl mb-4" id="intro-dialogue">歡迎來到《生命劇本》的世界。這不只是一趟旅程，更是你親手撰寫的篇章。</p>
+                <button id="start-game-button" class="game-button mt-4">開始旅程</button>
+            </div>
+        </div>
+
+        <div id="character-creation-scene" class="game-scene z-10 hidden">
+            <h2 class="text-4xl font-bold text-white mb-6">創建你的角色</h2>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-3/4 md:w-1/2 lg:w-1/3 flex flex-col items-center flex-grow overflow-y-auto py-8">
+                <div class="mb-6 text-center">
+                    <p class="text-lg mb-2">設定你的角色外觀 (簡易Q版剪影)</p>
+                    <div id="character-avatar" class="w-24 h-24 bg-blue-400 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <button id="randomize-avatar" class="game-button text-sm px-4 py-2">隨機外觀</button>
+                </div>
+
+                <div class="mb-6 w-full">
+                    <label for="player-name" class="block text-lg font-semibold mb-2">你的名字：</label>
+                    <input type="text" id="player-name" placeholder="輸入你的名字" class="w-full">
+                </div>
+
+                <div class="mb-6 w-full">
+                    <p class="block text-lg font-semibold mb-2">我的三個美好特質：</p>
+                    <input type="text" id="trait1" placeholder="特質一" class="w-full mb-2">
+                    <input type="text" id="trait2" placeholder="特質二" class="w-full mb-2">
+                    <input type="text" id="trait3" placeholder="特質三" class="w-full">
+                </div>
+            </div>
+            <button id="confirm-character-button" class="game-button mt-8 mb-4">確認角色，啟程！</button>
+        </div>
+
+        <div id="main-game-scene" class="game-scene z-10 hidden">
+            <div class="absolute top-4 left-4 bg-gray-800 p-4 rounded-lg shadow-md flex items-center">
+                <i class="fas fa-scroll mr-2 text-blue-400"></i>
+                <span class="text-lg font-semibold">主線任務：撰寫生命故事</span>
+            </div>
+            <div class="absolute top-4 right-4 bg-gray-800 p-4 rounded-lg shadow-md flex items-center">
+                <span class="text-lg font-semibold mr-2">生命故事進度：</span>
+                <div class="progress-bar-container w-40">
+                    <div id="story-progress-bar" class="progress-bar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center w-full max-h-[calc(100vh-12rem)] overflow-y-auto py-8">
+                <div id="current-task-display" class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 text-center">
+                    <p class="text-xl font-bold text-blue-300 mb-2">當前任務：</p>
+                    <p class="text-lg" id="current-task-text">...</p>
+                </div>
+
+                <div id="memory-maze-section" class="flex flex-col items-center hidden">
+                    <p class="text-2xl font-bold mb-4">深入記憶迷宮，尋找碎片...</p>
+                    <div id="memory-fragments-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-gray-700 rounded-lg shadow-inner">
+                        </div>
+                    <button id="collect-fragment-button" class="game-button mt-6">收集記憶碎片</button>
+                </div>
+
+                <div id="story-puzzling-section" class="flex flex-col items-center hidden">
+                    <p class="text-2xl font-bold mb-4">拼湊你的生命故事</p>
+                    <div class="bg-gray-700 p-6 rounded-lg shadow-inner w-full max-w-2xl">
+                        <p class="text-lg mb-4">已收集碎片：<span id="collected-fragments-count" class="font-bold text-blue-300">0</span></p>
+                        <div id="story-timeline" class="border-2 border-dashed border-gray-500 p-4 rounded-lg min-h-[150px] flex flex-wrap gap-2 justify-center items-center">
+                            <p class="text-gray-400">將碎片拖曳到這裡，或點擊下方按鈕拼湊</p>
+                        </div>
+                        <button id="assemble-story-button" class="game-button mt-4">拼湊故事</button>
+                    </div>
+                </div>
+
+                <div id="emotional-management-section" class="flex flex-col items-center hidden">
+                    <p class="text-2xl font-bold mb-4">情緒照護</p>
+                    <div class="bg-gray-700 p-6 rounded-lg shadow-inner w-full max-w-md text-center">
+                        <p class="text-lg mb-4">當前情緒值：<span id="emotion-value" class="font-bold text-red-400">100</span> / 100</p>
+                        <div class="progress-bar-container mb-4">
+                            <div id="emotion-progress-bar" class="progress-bar bg-red-500" style="width: 100%;"></div>
+                        </div>
+                        <p class="text-md text-gray-300 mb-4">遇到不愉快的回憶時，情緒值會下降。</p>
+                        <div class="flex space-x-4 justify-center">
+                            <button id="use-stress-bottle" class="game-button flex items-center">
+                                <i class="fas fa-flask mr-2"></i> 流星紓壓瓶
+                            </button>
+                            <button id="start-mindfulness-game" class="game-button flex items-center">
+                                <i class="fas fa-leaf mr-2"></i> 五感正念
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="challenges-scene" class="game-scene z-10 hidden">
+            <h2 class="text-4xl font-bold text-white mb-6">挑戰與技能考驗</h2>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-3/4 md:w-1/2 lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[calc(100vh-8rem)] overflow-y-auto py-8">
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                    <i class="fas fa-clock text-5xl text-blue-400 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">早八起床事件</h3>
+                    <p class="text-lg mb-4">鬧鐘響了！你的選擇會影響今天的狀態。</p>
+                    <p class="text-md mb-4">當前疲勞狀態：<span id="fatigue-status" class="text-red-400">疲憊不堪</span></p>
+                    <div class="flex space-x-4">
+                        <button id="sleep-more" class="game-button bg-red-500 hover:bg-red-600">繼續睡</button>
+                        <button id="wake-up" class="game-button bg-green-500 hover:bg-green-600">立刻起床</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                    <i class="fas fa-microphone text-5xl text-blue-400 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">公開分享挑戰</h3>
+                    <p class="text-lg mb-4">在虛擬舞台上展現你的口語表達能力！</p>
+                    <div class="progress-bar-container w-full mb-4">
+                        <div id="courage-bar" class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <p class="text-md mb-4">膽量值：<span id="courage-value">0</span> / 100</p>
+                    <button id="start-public-sharing" class="game-button">開始分享</button>
+                </div>
+
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                    <i class="fas fa-pencil-alt text-5xl text-blue-400 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">生命故事1000字</h3>
+                    <p class="text-lg mb-4">撰寫你的生命故事，展現你的深度與經歷。</p>
+                    <textarea id="writing-area" class="w-full h-32 mb-4 p-3 rounded-lg" placeholder="輸入你的生命故事..."></textarea>
+                    <div class="flex space-x-2 mt-4">
+                        <button id="get-writing-suggestion" class="game-button flex items-center bg-purple-600 hover:bg-purple-700">
+                            <i class="fas fa-lightbulb mr-2"></i> ✨故事靈感✨
+                        </button>
+                        <button id="submit-writing" class="game-button">提交書寫</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                    <i class="fas fa-video text-5xl text-blue-400 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">影片剪輯迷你遊戲</h3>
+                    <p class="text-lg mb-4">將你的故事文字、圖片、音樂組合成影片！</p>
+                    <div class="progress-bar-container w-full mb-4">
+                        <div id="video-completion-bar" class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <p class="text-md mb-4">影片完成度：<span id="video-completion-value">0</span>%</p>
+                    <button id="start-video-editing" class="game-button">開始剪輯</button>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row gap-4 mt-8 mb-4">
+                <button id="complete-challenges-button" class="game-button">完成挑戰任務</button>
+            </div>
+        </div>
+
+        <div id="support-scene" class="game-scene z-10 hidden">
+            <h2 class="text-4xl font-bold text-white mb-6">支援與連結</h2>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-3/4 md:w-1/2 lg:w-2/3 flex flex-col items-center flex-grow overflow-y-auto py-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
+                    <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                        <img src="https://placehold.co/100x100/63b3ed/ffffff?text=老師" alt="老師" class="rounded-full mb-4 border-4 border-blue-400">
+                        <h3 class="text-2xl font-bold mb-2">駱育萱老師</h3>
+                        <p class="text-md text-gray-300 mb-4">「笑起來真好看」光環</p>
+                        <div class="flex space-x-4">
+                            <button id="talk-to-teacher" class="game-button flex items-center">
+                                <i class="fas fa-question-circle mr-2"></i> 請教問題
+                            </button>
+                            <button id="get-encouragement" class="game-button flex items-center">
+                                <i class="fas fa-heart mr-2"></i> 尋求鼓勵
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-700 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                        <img src="https://placehold.co/100x100/a0aec0/ffffff?text=TA" alt="TA學姊" class="rounded-full mb-4 border-4 border-gray-400">
+                        <h3 class="text-2xl font-bold mb-2">TA學姊</h3>
+                        <p class="text-md text-gray-300 mb-4">提供輔助與指導</p>
+                        <div class="flex space-x-4">
+                            <button id="talk-to-ta" class="game-button flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i> 尋求協助
+                            </button>
+                            <button id="get-task-hint" class="game-button flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i> 任務提示
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md w-full text-center">
+                    <h3 class="text-2xl font-bold mb-4">探索與回顧</h3>
+                    <p class="text-lg mb-4">探索共同的回憶與成果！</p>
+                    <div class="flex flex-wrap justify-center gap-4 mb-4">
+                        <div id="common-memory-btn" class="bg-blue-600 p-4 rounded-lg shadow-md flex flex-col items-center cursor-pointer hover:scale-105 transition-transform duration-200 text-white text-center w-36 h-36 justify-center">
+                            <i class="fas fa-calendar-alt text-4xl mb-2"></i>
+                            <span class="text-lg">那一年共同回憶</span>
+                        </div>
+                        <div id="souvenir-grid-btn" class="bg-green-600 p-4 rounded-lg shadow-md flex flex-col items-center cursor-pointer hover:scale-105 transition-transform duration-200 text-white text-center w-36 h-36 justify-center">
+                            <i class="fas fa-th-large text-4xl mb-2"></i>
+                            <span class="text-lg">紀念品九宮格</span>
+                        </div>
+                        <div id="life-image-btn" class="bg-purple-600 p-4 rounded-lg shadow-md flex flex-col items-center cursor-pointer hover:scale-105 transition-transform duration-200 text-white text-center w-36 h-36 justify-center">
+                            <i class="fas fa-image text-4xl mb-2"></i>
+                            <span class="text-lg">生命圖像</span>
+                        </div>
+                        <div id="emotion-timeline-btn" class="bg-yellow-600 p-4 rounded-lg shadow-md flex flex-col items-center cursor-pointer hover:scale-105 transition-transform duration-200 text-white text-center w-36 h-36 justify-center">
+                            <i class="fas fa-chart-line text-4xl mb-2"></i>
+                            <span class="text-lg">情緒年史</span>
+                        </div>
+                    </div>
+                    <button id="listen-to-story" class="game-button flex items-center justify-center mx-auto">
+                        <i class="fas fa-users mr-2"></i> 探索更多
+                    </button>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row gap-4 mt-8 mb-4">
+                <button id="complete-support-task" class="game-button">完成支援與連結</button>
+            </div>
+        </div>
+
+        <div id="growth-scene" class="game-scene z-10 hidden">
+            <h2 class="text-4xl font-bold text-white mb-6">成長與成就</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg w-3/4 md:w-1/2 lg:w-2/3 flex flex-col items-center flex-grow overflow-y-auto py-8">
+                <h3 class="text-3xl font-bold text-blue-700 mb-6">你的能力面板</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-8">
+                    <div class="skill-item">
+                        <span class="text-purple-600">自我認識</span>
+                        <span class="level text-purple-600" id="skill-self-awareness">Lv 4</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="text-green-600">表達能力</span>
+                        <span class="level text-green-600" id="skill-expression">Lv 4</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="text-red-600">影片剪輯</span>
+                        <span class="level text-red-600" id="skill-video-editing">Lv 3</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="text-indigo-600">心理韌性</span>
+                        <span class="level text-indigo-600" id="skill-resilience">Lv 3</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="level text-yellow-600">問題解決</span>
+                        <span class="level text-yellow-600" id="skill-problem-solving">Lv 3</span>
+                    </div>
+                </div>
+
+                <h3 class="text-3xl font-bold text-green-700 mb-6">已完成成果</h3>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full text-center mb-8">
+                    <p class="text-xl font-bold text-gray-800 mb-2">「生命關鍵詞書寫」</p>
+                    <p class="text-lg text-green-500 mb-4">已完成！<i class="fas fa-check-circle ml-2"></i></p>
+                    <p class="text-xl font-bold text-gray-800 mb-2">「生命故事影片」</p>
+                    <p class="text-lg text-green-500">已完成！<i class="fas fa-check-circle ml-2"></i></p>
+                </div>
+
+                <h3 class="text-3xl font-bold text-yellow-700 mb-6">成就達成！</h3>
+                <div id="achievements-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-8">
+                    </div>
+
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full text-center">
+                    <p class="text-xl font-bold text-gray-800 mb-4">給自己的一句話：</p>
+                    <textarea id="motto-input" class="w-full h-20 mb-4 p-3 rounded-lg" placeholder="輸入你的座右銘..."></textarea>
+                    <button id="confirm-motto-button" class="game-button">確認座右銘</button>
+                    <p id="personal-motto" class="text-2xl italic text-blue-600 mt-4">"尚未設定"</p>
+                </div>
+
+                <p class="text-lg mt-8 text-center text-gray-800">
+                    <i class="fas fa-globe-americas text-blue-600 mr-2"></i>
+                    <span class="font-bold">SDGs 目標 3: 良好健康與福祉</span>
+                    <span class="block text-sm text-gray-500">(你的旅程貢獻於此)</span>
+                </p>
+            </div>
+            <div class="flex flex-col items-center mt-auto mb-4"> 
+                <button id="restart-game-button-growth" class="game-button mt-4 bg-purple-600 hover:bg-purple-700">重新遊戲</button>
+                <button id="proceed-to-ending" class="game-button mt-4">結束旅程</button>
+            </div>
+        </div>
+
+        <div id="ending-scene" class="game-scene z-10 hidden">
+            <h2 class="text-4xl font-bold text-white mb-6 text-shadow-md">感謝參與！</h2>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-3/4 md:w-1/2 lg:w-1/3 flex flex-col items-center flex-grow overflow-y-auto py-8">
+                <p class="text-xl mb-4">你的故事，才正要開始。</p>
+                <div class="text-gray-400 text-sm">
+                    <p>製作人員：</p>
+                    <p>老師：駱育萱老師</p>
+                    <p>助教：TA學姊</p>
+                    <p>全體流音一乙玩家</p>
+                    <p class="mt-4">《生命劇本：自我探索之旅》</p>
+                </div>
+            </div>
+            <button id="restart-game-button" class="game-button mt-8 mb-4 bg-purple-600 hover:bg-purple-700">重新遊戲</button>
+        </div>
+
+        <div id="message-modal" class="modal">
+            <div class="modal-content">
+                <p id="modal-message" class="text-xl mb-6"></p>
+                <button id="modal-close-button" class="game-button">確定</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Game State Variables
+        let playerName = "";
+        let playerTraits = [];
+        let storyProgress = 0; // 0-100
+        let emotionValue = 100; // 0-100
+        let courageValue = 0; // Initialized to 0 for the challenge
+        let fatigueStatus = "疲憊不堪"; // Initialized to "疲憊不堪" for the challenge
+        let videoCompletion = 0;
+        let collectedFragments = [];
+
+        // New: Track completion of individual challenges
+        let completedChallenges = {
+            publicSharing: false,
+            videoEditing: false,
+            earlyMorning: false,
+            keywordWriting: false // This will now track "生命故事1000字" completion
+        };
+
+        // Corrected skill object keys to match HTML IDs for proper updating
+        const skills = {
+            "self-awareness": 4,
+            "expression": 4,
+            "video-editing": 3,
+            "resilience": 3,
+            "problem-solving": 3
+        };
+
+        const achievements = {
+            completedLifeScript: false,
+            braveShare: false,
+            learnedToFace: false,
+            resilienceBoost: false
+        };
+
+        // UI Elements
+        const gameContainer = document.getElementById('game-container');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const introScene = document.getElementById('intro-scene');
+        const characterCreationScene = document.getElementById('character-creation-scene');
+        const mainGameScene = document.getElementById('main-game-scene');
+        const challengesScene = document.getElementById('challenges-scene');
+        const supportScene = document.getElementById('support-scene');
+        const growthScene = document.getElementById('growth-scene');
+        const endingScene = document.getElementById('ending-scene');
+
+        const startGameButton = document.getElementById('start-game-button');
+        const confirmCharacterButton = document.getElementById('confirm-character-button');
+        const randomizeAvatarButton = document.getElementById('randomize-avatar');
+        const playerNameInput = document.getElementById('player-name');
+        const traitInputs = [
+            document.getElementById('trait1'),
+            document.getElementById('trait2'),
+            document.getElementById('trait3')
+        ];
+        const characterAvatar = document.getElementById('character-avatar');
+        const storyProgressBar = document.getElementById('story-progress-bar');
+        const currentTaskText = document.getElementById('current-task-text');
+
+        const memoryMazeSection = document.getElementById('memory-maze-section');
+        const memoryFragmentsContainer = document.getElementById('memory-fragments-container');
+        const collectFragmentButton = document.getElementById('collect-fragment-button');
+        const storyPuzzlingSection = document.getElementById('story-puzzling-section');
+        const collectedFragmentsCount = document.getElementById('collected-fragments-count');
+        const storyTimeline = document.getElementById('story-timeline');
+        const assembleStoryButton = document.getElementById('assemble-story-button');
+        const emotionalManagementSection = document.getElementById('emotional-management-section');
+        const emotionValueDisplay = document.getElementById('emotion-value');
+        const emotionProgressBar = document.getElementById('emotion-progress-bar');
+        const useStressBottleButton = document.getElementById('use-stress-bottle');
+        const startMindfulnessGameButton = document.getElementById('start-mindfulness-game');
+
+        const courageBar = document.getElementById('courage-bar');
+        const courageValueDisplay = document.getElementById('courage-value');
+        const startPublicSharingButton = document.getElementById('start-public-sharing');
+        const videoCompletionBar = document.getElementById('video-completion-bar');
+        const videoCompletionValueDisplay = document.getElementById('video-completion-value');
+        const startVideoEditingButton = document.getElementById('start-video-editing');
+        const fatigueStatusDisplay = document.getElementById('fatigue-status');
+        const sleepMoreButton = document.getElementById('sleep-more');
+        const wakeUpButton = document.getElementById('wake-up');
+        const writingArea = document.getElementById('writing-area');
+        const submitWritingButton = document.getElementById('submit-writing');
+        const getWritingSuggestionButton = document.getElementById('get-writing-suggestion'); // Corrected from document()
+
+        const talkToTeacherButton = document.getElementById('talk-to-teacher');
+        const getEncouragementButton = document.getElementById('get-encouragement');
+        const talkToTAButton = document.getElementById('talk-to-ta');
+        const getTaskHintButton = document.getElementById('get-task-hint');
+        const listenToStoryButton = document.getElementById('listen-to-story');
+        const proceedToEndingButton = document.getElementById('proceed-to-ending');
+        const completeSupportTaskButton = document.getElementById('complete-support-task');
+        const completeChallengesButton = document.getElementById('complete-challenges-button'); // New button
+
+        // Skill level elements
+        const skillSelfAwareness = document.getElementById('skill-self-awareness');
+        const skillExpression = document.getElementById('skill-expression');
+        const skillVideoEditing = document.getElementById('skill-video-editing');
+        const skillResilience = document.getElementById('skill-resilience');
+        const skillProblemSolving = document.getElementById('skill-problem-solving');
+        
+        const achievementsList = document.getElementById('achievements-list');
+        const personalMotto = document.getElementById('personal-motto');
+        const mottoInput = document.getElementById('motto-input');
+        const confirmMottoButton = document.getElementById('confirm-motto-button');
+
+        const messageModal = document.getElementById('message-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseButton = document.getElementById('modal-close-button');
+        const restartGameButtonEnding = document.getElementById('restart-game-button');
+        const restartGameButtonGrowth = document.getElementById('restart-game-button-growth');
+
+        // New elements for the interactive options in support scene
+        const commonMemoryBtn = document.getElementById('common-memory-btn');
+        const souvenirGridBtn = document.getElementById('souvenir-grid-btn');
+        const lifeImageBtn = document.getElementById('life-image-btn');
+        const emotionTimelineBtn = document.getElementById('emotion-timeline-btn');
+
+        // Three.js Setup
+        let scene, camera, renderer;
+        let particles = [];
+        let characterMesh; // For the abstract human silhouette
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threejs-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // For better resolution on high-DPI screens
+
+            // Particle System for Intro/Loading
+            const particleGeometry = new THREE.BufferGeometry();
+            const particleCount = 2000;
+            const posArray = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 100; // Random positions
+            }
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blue color for stars
+                size: 0.1,
+                transparent: true,
+                blending: THREE.AdditiveBlending, // For glowing effect
+                depthWrite: false // Important for transparency
+            });
+
+            const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particleSystem);
+            particles.push(particleSystem); // Store for animation
+
+            // Abstract Human Silhouette (initially transparent)
+            const humanShape = new THREE.Shape();
+            humanShape.moveTo(0, 0);
+            humanShape.lineTo(0.5, 1);
+            humanShape.lineTo(1, 0);
+            humanShape.lineTo(0.5, -1);
+            humanShape.lineTo(0, 0); // Simple abstract shape, like a diamond or star
+
+            const extrudeSettings = {
+                steps: 1,
+                depth: 0.2,
+                bevelEnabled: true,
+                bevelThickness: 0.1,
+                bevelSize: 0.1,
+                bevelOffset: 0,
+                bevelSegments: 1
+            };
+            const humanGeometry = new THREE.ExtrudeGeometry(humanShape, extrudeSettings);
+            const humanMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffffff, // White
+                transparent: true,
+                opacity: 0
+            });
+            characterMesh = new THREE.Mesh(humanGeometry, humanMaterial);
+            scene.add(characterMesh);
+
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+            scene.add(ambientLight);
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            // Animate particles
+            if (particles.length > 0) {
+                particles[0].rotation.y += 0.0005;
+                particles[0].rotation.x += 0.0005;
+            }
+
+            // Animate character silhouette during intro/loading
+            if (introScene.classList.contains('active')) {
+                characterMesh.rotation.y += 0.002;
+                characterMesh.rotation.x += 0.001;
+                // Gradually increase opacity of the silhouette
+                if (characterMesh.material.opacity < 0.5) {
+                    characterMesh.material.opacity += 0.001;
+                }
+            } else {
+                // Fade out silhouette when not in intro
+                if (characterMesh.material.opacity > 0) {
+                    characterMesh.material.opacity -= 0.01;
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Helper for showing loading status
+        function showLoading(message) {
+            modalMessage.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${message}`;
+            modalMessage.classList.add('text-white');
+            messageModal.classList.add('active');
+            modalCloseButton.style.display = 'none'; // Hide close button during loading
+        }
+
+        // Modified showMessage to also hide loading and show close button
+        function showMessage(message, callback) {
+            modalMessage.innerHTML = message;
+            modalMessage.classList.add('text-white');
+            modalCloseButton.style.display = 'block'; // Show close button
+            modalCloseButton.onclick = () => {
+                modalMessage.innerHTML = '';
+                modalMessage.classList.remove('text-white');
+                messageModal.classList.remove('active');
+                if (callback) callback();
+            };
+            messageModal.classList.add('active');
+        }
+
+        // Gemini API Call Function
+        async function callGeminiAPI(prompt, schema = null) {
+            // IMPORTANT: If running this code locally (not in a Canvas environment),
+            // you MUST replace "" with your actual Gemini API Key obtained from Google AI Studio:
+            // https://aistudio.google.com/app/apikey
+            const apiKey = "AIzaSyCanTPq6tUrI8sV8C67jEBcKSja77kKMIM"; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            let payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
+
+            if (schema) {
+                payload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: schema
+                };
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`Gemini API call failed with status ${response.status}:`, errorText);
+                    showMessage(`與AI溝通時發生錯誤：${response.status}。請稍後再試。`);
+                    return "無法生成回應。";
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    if (schema) {
+                        try {
+                            return JSON.parse(text);
+                        } catch (parseError) {
+                            console.error("Error parsing Gemini API JSON response:", parseError, "Raw text:", text);
+                            showMessage("AI回應格式錯誤。請稍後再試。");
+                            return "無法生成回應。";
+                        }
+                    }
+                    return text;
+                } else {
+                    console.error("Gemini API response structure unexpected or empty candidates:", result);
+                    showMessage("AI未能生成有效回應。請稍後再試。");
+                    return "無法生成回應。";
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API (network or other unexpected error):", error);
+                showMessage("與AI溝通時發生網路或未知錯誤。請檢查您的連線。");
+                return "生成回應時發生錯誤。";
+            }
+        }
+
+        // Game Flow Functions
+        function showScene(sceneElement) {
+            // Hide all scenes first
+            document.querySelectorAll('.game-scene').forEach(scene => {
+                scene.classList.remove('active');
+                scene.classList.add('hidden');
+            });
+            // Show the target scene
+            sceneElement.classList.remove('hidden');
+            sceneElement.classList.add('active');
+        }
+
+        function updateProgressBar(element, value) {
+            element.style.width = `${value}%`;
+        }
+
+        function updateEmotion(change) {
+            emotionValue = Math.max(0, Math.min(100, emotionValue + change));
+            emotionValueDisplay.textContent = emotionValue;
+            updateProgressBar(emotionProgressBar, emotionValue);
+            if (emotionValue < 30) {
+                emotionValueDisplay.classList.remove('text-green-400', 'text-yellow-400');
+                emotionValueDisplay.classList.add('text-red-400');
+                emotionProgressBar.classList.remove('bg-green-500', 'bg-yellow-500');
+                emotionProgressBar.classList.add('bg-red-500');
+            } else if (emotionValue < 70) {
+                emotionValueDisplay.classList.remove('text-green-400', 'text-red-400');
+                emotionValueDisplay.classList.add('text-yellow-400');
+                emotionProgressBar.classList.remove('bg-green-500', 'bg-red-500');
+                emotionProgressBar.classList.add('bg-yellow-500');
+            } else {
+                emotionValueDisplay.classList.remove('text-yellow-400', 'text-red-400');
+                emotionValueDisplay.classList.add('text-green-400');
+                emotionProgressBar.classList.remove('bg-yellow-500', 'bg-red-500');
+                emotionProgressBar.classList.add('bg-green-500');
+            }
+        }
+
+        function updateCourage(change) {
+            courageValue = Math.max(0, Math.min(100, courageValue + change));
+            courageValueDisplay.textContent = courageValue;
+            updateProgressBar(courageBar, courageValue);
+        }
+
+        function updateSkill(skillName, levelChange) {
+            skills[skillName] = Math.max(1, skills[skillName] + levelChange);
+            const skillElement = document.getElementById(`skill-${skillName}`);
+            if (skillElement) {
+                skillElement.textContent = `Lv ${skills[skillName]}`;
+            } else {
+                console.error(`Error: Skill element with ID 'skill-${skillName}' not found.`);
+            }
+        }
+
+        function grantAchievement(achievementName, message) {
+            if (!achievements[achievementName]) {
+                achievements[achievementName] = true;
+                const achievementDiv = document.createElement('div');
+                // Updated achievement card styling
+                achievementDiv.className = 'p-4 rounded-lg shadow-md flex items-center justify-between animate-fadeIn achievement-card-vibrant';
+                achievementDiv.innerHTML = `
+                    <span class="font-semibold text-white">${message}</span>
+                    <i class="fas fa-trophy text-yellow-300 text-xl"></i>
+                `;
+                achievementsList.appendChild(achievementDiv);
+                showMessage(`恭喜你達成成就：${message}！`);
+            }
+        }
+
+        // Game Logic
+        let currentTaskIndex = 0;
+        const gameTasks = [
+            {
+                name: "完成美好特質學習單",
+                scene: characterCreationScene,
+                action: () => {
+                    currentTaskText.textContent = "請設定你的角色外觀及填寫美好特質。";
+                    showScene(characterCreationScene);
+                }
+            }, // 0
+            {
+                name: "繪製心智圖 (解鎖心智圖技能)",
+                scene: mainGameScene,
+                action: () => {
+                    currentTaskText.textContent = "心智圖技能解鎖！點擊收集記憶碎片。";
+                    showScene(mainGameScene);
+                    memoryMazeSection.classList.remove('hidden');
+                    storyPuzzlingSection.classList.add('hidden');
+                    emotionalManagementSection.classList.add('hidden');
+                    updateSkill('self-awareness', 1); // Unlock Mind Map -> Self-awareness Lv UP
+                    generateMemoryFragments();
+                }
+            }, // 1
+            {
+                name: "深入記憶迷宮，尋找記憶碎片",
+                scene: mainGameScene,
+                action: () => {
+                    currentTaskText.textContent = "尋找並收集記憶碎片，拼湊你的生命故事。";
+                    showScene(mainGameScene);
+                    memoryMazeSection.classList.remove('hidden');
+                    storyPuzzlingSection.classList.add('hidden');
+                    emotionalManagementSection.classList.add('hidden');
+                    generateMemoryFragments();
+                }
+            }, // 2
+            {
+                name: "拼湊生命故事 (情緒年史/生命圖像)",
+                scene: mainGameScene,
+                action: () => {
+                    currentTaskText.textContent = "將收集到的碎片拼湊成你的生命故事。";
+                    showScene(mainGameScene);
+                    memoryMazeSection.classList.add('hidden');
+                    storyPuzzlingSection.classList.remove('hidden');
+                    emotionalManagementSection.classList.add('hidden');
+                }
+            }, // 3
+            {
+                name: "情緒管理與心理韌性提升",
+                scene: mainGameScene,
+                action: () => {
+                    currentTaskText.textContent = "學習照顧好自己，提升心理韌性。";
+                    showScene(mainGameScene);
+                    memoryMazeSection.classList.add('hidden');
+                    storyPuzzlingSection.classList.add('hidden');
+                    emotionalManagementSection.classList.remove('hidden');
+                    emotionValue = 60; // Set initial emotion to 60
+                    updateEmotion(0); // Update display
+                    showMessage("你感覺到一些情緒波動，情緒值變為 60！請使用情緒照護工具。");
+                }
+            }, // 4
+            {
+                name: "與NPC互動 (請教/鼓勵)", // This is now the Support and Connection scene
+                scene: supportScene,
+                action: () => {
+                    currentTaskText.textContent = "向老師或TA尋求協助與鼓勵，或與隊友互動。";
+                    showScene(supportScene);
+                    showMessage("組隊功能開啟！現在你可以前往「支援與連結」頁面，與隊友互相交流。完成後點擊「完成支援與連結」。");
+                }
+            }, // 5
+            {
+                name: "挑戰與技能考驗", // Grouping all challenges under one task for flow
+                scene: challengesScene,
+                action: () => {
+                    currentTaskText.textContent = "完成所有挑戰任務，提升你的技能！";
+                    showScene(challengesScene);
+                    // Reset challenge completion status when entering this task
+                    completedChallenges = {
+                        publicSharing: false,
+                        videoEditing: false,
+                        earlyMorning: false,
+                        keywordWriting: false // This refers to "生命故事1000字" now
+                    };
+                    // Re-initialize fatigue status for this task
+                    fatigueStatus = "疲憊不堪";
+                    fatigueStatusDisplay.textContent = fatigueStatus;
+                    fatigueStatusDisplay.classList.remove('text-green-400');
+                    fatigueStatusDisplay.classList.add('text-red-400');
+                    // Re-initialize courage for this task
+                    courageValue = 0;
+                    updateCourage(0);
+                    // Re-initialize video completion for this task
+                    videoCompletion = 0;
+                    updateProgressBar(videoCompletionBar, videoCompletion);
+                    videoCompletionValueDisplay.textContent = videoCompletion;
+                    writingArea.value = ''; // Clear writing area
+                }
+            }, // 6 (This task now encompasses all individual challenges)
+            {
+                name: "能力提升與成就總結",
+                scene: growthScene,
+                action: () => {
+                    currentTaskText.textContent = "檢視你的成長與達成成就。";
+                    showScene(growthScene);
+                    updateSkill('self-awareness', 1);
+                    updateSkill('expression', 1);
+                    updateSkill('video-editing', 1);
+                    updateSkill('resilience', 1);
+                    updateSkill('problem-solving', 1);
+                    grantAchievement('completedLifeScript', '完成我的生命劇本');
+                    grantAchievement('braveShare', '勇於分享');
+                    grantAchievement('learnedToFace', '學會面對');
+                    grantAchievement('resilienceBoost', '心理韌性提升');
+                }
+            }, // 7
+            {
+                name: "遊戲謝幕",
+                scene: endingScene,
+                action: () => {
+                    currentTaskText.textContent = "感謝你參與這場生命劇本的冒險！";
+                    showScene(endingScene);
+                }
+            } // 8
+        ];
+
+        function nextTask() {
+            if (currentTaskIndex < gameTasks.length) {
+                gameTasks[currentTaskIndex].action();
+                updateProgressBar(storyProgressBar, ((currentTaskIndex + 1) / gameTasks.length) * 100);
+            } else {
+                showScene(endingScene);
+            }
+        }
+
+        // Function to check if all challenges are completed
+        function checkAllChallengesCompleted() {
+            if (completedChallenges.publicSharing &&
+                completedChallenges.videoEditing &&
+                completedChallenges.earlyMorning &&
+                completedChallenges.keywordWriting) {
+                showMessage("恭喜！所有挑戰任務都已完成！", () => {
+                    currentTaskIndex++; // Advance to the next task (Growth Scene)
+                    nextTask();
+                });
+            } else {
+                let remaining = [];
+                if (!completedChallenges.publicSharing) remaining.push('公開分享挑戰');
+                if (!completedChallenges.videoEditing) remaining.push('影片剪輯迷你遊戲');
+                if (!completedChallenges.earlyMorning) remaining.push('早八起床事件');
+                if (!completedChallenges.keywordWriting) remaining.push('生命故事1000字'); // Updated text
+                showMessage(`還有一些挑戰任務尚未完成：${remaining.join('、')}。請繼續努力！`);
+            }
+        }
+
+        // Event Listeners
+        startGameButton.addEventListener('click', () => {
+            nextTask();
+        });
+
+        randomizeAvatarButton.addEventListener('click', () => {
+            const colors = ['#63b3ed', '#4fd1c5', '#f6ad55', '#fc8181', '#9f7aea'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            characterAvatar.style.backgroundColor = randomColor;
+        });
+
+        confirmCharacterButton.addEventListener('click', () => {
+            playerName = playerNameInput.value.trim();
+            playerTraits = traitInputs.map(input => input.value.trim()).filter(Boolean);
+
+            if (!playerName) {
+                showMessage("請輸入你的名字！");
+                return;
+            }
+            if (playerTraits.length === 0) {
+                showMessage("請至少輸入一個美好特質！");
+                return;
+            }
+
+            const styledPlayerName = `<span class="text-yellow-300 font-bold">${playerName}</span>`;
+            const styledPlayerTraits = playerTraits.map(trait => `<span class="text-yellow-300 font-bold">${trait}</span>`).join('、');
+
+            showMessage(`歡迎你，${styledPlayerName}！你的特質是：${styledPlayerTraits}。`, () => {
+                currentTaskIndex++;
+                nextTask();
+            });
+        });
+
+        // Memory Maze interaction
+        function generateMemoryFragments() {
+            memoryFragmentsContainer.innerHTML = '';
+            const fragmentTypes = [
+                { icon: 'fas fa-camera', text: '視覺記憶' },
+                { icon: 'fas fa-volume-up', text: '聽覺記憶' },
+                { icon: 'fas fa-hand-sparkles', text: '觸覺記憶' },
+                { icon: 'fas fa-leaf', text: '嗅覺記憶' },
+                { icon: 'fas fa-utensils', text: '味覺記憶' },
+                { icon: 'fas fa-heart', text: '情感碎片' },
+                { icon: 'fas fa-calendar-alt', text: '事件碎片' },
+            ];
+            for (let i = 0; i < 8; i++) {
+                const randomFragment = fragmentTypes[Math.floor(Math.random() * fragmentTypes.length)];
+                const fragmentDiv = document.createElement('div');
+                fragmentDiv.className = 'bg-blue-600 p-4 rounded-lg shadow-md flex flex-col items-center cursor-pointer hover:scale-105 transition-transform duration-200';
+                fragmentDiv.innerHTML = `<i class="${randomFragment.icon} text-3xl mb-2 text-white"></i><span class="text-white text-sm">${randomFragment.text}</span>`;
+                fragmentDiv.dataset.type = randomFragment.text;
+                fragmentDiv.addEventListener('click', async () => {
+                    if (!fragmentDiv.classList.contains('opacity-50')) {
+                        collectedFragments.push(fragmentDiv.dataset.type);
+                        fragmentDiv.classList.add('opacity-50', 'pointer-events-none');
+                        collectedFragmentsCount.textContent = collectedFragments.length;
+
+                        showLoading("✨生成記憶描述中...✨");
+
+                        // Modified prompt to explicitly exclude Pinyin
+                        const prompt = `Generate a short, evocative description (around 15-20 words) for a "${fragmentDiv.dataset.type}" memory, considering the player's traits: ${playerTraits.join(', ')}. Focus on sensory details or a brief feeling. Respond in Traditional Chinese, without Pinyin or any Romanization.`;
+                        const generatedDescription = await callGeminiAPI(prompt);
+
+                        showMessage(`收集到「${fragmentDiv.dataset.type}」！<br>${generatedDescription}`);
+                    }
+                });
+                memoryFragmentsContainer.appendChild(fragmentDiv);
+            }
+        }
+
+        collectFragmentButton.addEventListener('click', () => {
+            if (collectedFragments.length >= 3) {
+                showMessage("你已收集到足夠的記憶碎片！", () => {
+                    currentTaskIndex++;
+                    nextTask();
+                });
+            } else {
+                showMessage(`請至少收集3個記憶碎片！你目前收集了 ${collectedFragments.length} 個。`);
+            }
+        });
+
+        assembleStoryButton.addEventListener('click', async () => {
+            if (collectedFragments.length > 0) {
+                // Clear existing content to avoid duplication or weird layout
+                storyTimeline.innerHTML = ''; // Clear the timeline
+
+                // Add fragments to the timeline
+                collectedFragments.forEach(fragment => {
+                    const span = document.createElement('span');
+                    span.className = 'bg-blue-500 text-white px-3 py-1 rounded-full text-sm mr-2 mb-2';
+                    span.textContent = fragment;
+                    storyTimeline.appendChild(span);
+                });
+
+                showLoading("✨生成生命故事中...✨");
+
+                const storyPrompt = `Based on these memory fragments: ${collectedFragments.join(', ')}, and the player's traits: ${playerName} (${playerTraits.join(', ')}), generate a concise, uplifting, and reflective paragraph (around 50-70 words) that weaves them into a preliminary life story. Focus on themes of growth and self-discovery. Respond in Traditional Chinese, without Pinyin or any Romanization.`;
+                const generatedStory = await callGeminiAPI(storyPrompt);
+
+                showMessage(`這是你初步的生命故事：<br><br>"${generatedStory}"`, () => {
+                    updateProgressBar(storyProgressBar, storyProgress + 10);
+                    showMessage("你的生命圖像已初步完成！", () => {
+                        currentTaskIndex++;
+                        nextTask();
+                    });
+                });
+            } else {
+                showMessage("請先收集記憶碎片！");
+            }
+        });
+
+        useStressBottleButton.addEventListener('click', () => {
+            updateEmotion(20); // Changed to +20 as per request
+            updateSkill('resilience', 1);
+            showMessage("你使用了流星紓壓瓶，情緒值恢復了！");
+        });
+
+        startMindfulnessGameButton.addEventListener('click', () => {
+            updateEmotion(20); // Changed to +20 as per request
+            updateSkill('resilience', 1);
+            showMessage("開始「五感正念」小遊戲... (想像你正在專注於呼吸、聲音、觸感...)", () => {
+                showMessage("你完成了五感正念，情緒值恢復了！");
+            });
+        });
+
+        // Add a button to complete emotional management and proceed
+        const completeEmotionCareButton = document.createElement('button');
+        completeEmotionCareButton.id = 'complete-emotion-care-button';
+        completeEmotionCareButton.className = 'game-button mt-4 flex items-center';
+        completeEmotionCareButton.innerHTML = '<i class="fas fa-check-circle mr-2"></i> 完成情緒照護';
+        emotionalManagementSection.appendChild(completeEmotionCareButton);
+
+        completeEmotionCareButton.addEventListener('click', () => {
+            if (emotionValue >= 80) { // Require high emotion to proceed
+                showMessage("你已完成情緒照護，感覺充滿活力！", () => {
+                    currentTaskIndex++; // Advance to the next task (Support Scene)
+                    nextTask();
+                });
+            } else {
+                showMessage("你的情緒值還不夠高，請繼續進行情緒照護！");
+            }
+        });
+
+
+        // Challenges interactions
+        startPublicSharingButton.addEventListener('click', () => {
+            showMessage("你站上了虛擬舞台... 準備分享你的故事。膽量值正在考驗中！", () => {
+                updateCourage(50); // Simulate initial courage gain for starting
+                if (courageValue > 0) {
+                    showMessage("你成功地分享了部分故事，獲得了台下同學的回饋：被感動、很勵志、佩服！", () => {
+                        updateCourage(30); // Further courage gain for success
+                        updateSkill('expression', 1);
+                        grantAchievement('braveShare', '勇於分享');
+                        completedChallenges.publicSharing = true; // Mark as completed
+                    });
+                } else {
+                    showMessage("你的膽量值歸零了，這次分享有些困難，但沒關係，下次會更好！", () => {
+                        updateCourage(50); // Restore some courage for next attempt
+                        completedChallenges.publicSharing = true; // Mark as completed even if difficult
+                    });
+                }
+            });
+        });
+
+        startVideoEditingButton.addEventListener('click', () => {
+            showMessage("你打開了影片剪輯軟體... 試著將故事片段組合起來！", () => {
+                videoCompletion += 30;
+                updateProgressBar(videoCompletionBar, videoCompletion);
+                videoCompletionValueDisplay.textContent = videoCompletion;
+                if (videoCompletion >= 100) {
+                    showMessage("恭喜！你的生命故事影片已完成！", () => {
+                        updateSkill('video-editing', 1);
+                        completedChallenges.videoEditing = true; // Mark as completed
+                    });
+                } else {
+                    showMessage("影片剪輯進度：30%。繼續努力！");
+                }
+            });
+        });
+
+        sleepMoreButton.addEventListener('click', () => {
+            showMessage("你選擇了繼續睡... 雖然很舒服，但今天的任務可能會受到影響。", () => {
+                fatigueStatus = "疲勞";
+                fatigueStatusDisplay.textContent = fatigueStatus;
+                fatigueStatusDisplay.classList.remove('text-green-400');
+                fatigueStatusDisplay.classList.add('text-red-400');
+                updateEmotion(-10);
+                completedChallenges.earlyMorning = true; // Mark as completed
+            });
+        });
+
+        wakeUpButton.addEventListener('click', () => {
+            showMessage("你選擇了立刻起床！雖然有點睏，但你充滿了活力。", () => {
+                fatigueStatus = "意志力完勝"; // Changed as per request
+                fatigueStatusDisplay.textContent = fatigueStatus;
+                fatigueStatusDisplay.classList.remove('text-red-400');
+                fatigueStatusDisplay.classList.add('text-green-400'); // Keep green for positive status
+                updateEmotion(5);
+                completedChallenges.earlyMorning = true; // Mark as completed
+            });
+        });
+
+        submitWritingButton.addEventListener('click', () => {
+            if (writingArea.value.trim().length > 0) { // Check if any text is entered
+                showMessage("恭喜！你完成了生命故事撰寫任務！", () => {
+                    updateSkill('expression', 1);
+                    updateSkill('self-awareness', 1);
+                    completedChallenges.keywordWriting = true; // Mark as completed
+                    storyProgress = Math.min(100, storyProgress + 40); // Add 40 to story progress
+                    updateProgressBar(storyProgressBar, storyProgress);
+                });
+            } else {
+                showMessage(`請輸入一些文字來撰寫你的生命故事！`);
+                updateEmotion(-5);
+            }
+        });
+
+        getWritingSuggestionButton.addEventListener('click', async () => {
+            const currentStory = writingArea.value.trim();
+            // Prompt to generate a longer paragraph for story inspiration
+            const prompt = `The user is trying to write their life story. Their current input is: '${currentStory}'. Please provide a short, reflective, and inspiring paragraph (around 50-80 words) as a suggestion to help them expand their life story. Focus on themes of personal journey, growth, and overcoming challenges. Respond in Traditional Chinese, without Pinyin or any Romanization.`;
+            showLoading("✨生成故事靈感中...✨");
+            const suggestion = await callGeminiAPI(prompt);
+            showMessage(`✨故事靈感✨：<br>${suggestion}`);
+            // Optionally, append the suggestion to the writing area or replace it
+            // writingArea.value = currentStory + "\n\n" + suggestion; 
+        });
+
+        // Event listener for the new "Complete Challenges" button
+        completeChallengesButton.addEventListener('click', checkAllChallengesCompleted);
+
+
+        // Support interactions
+        talkToTeacherButton.addEventListener('click', async () => {
+            showLoading("✨老師正在思考中...✨");
+            const prompt = `The player's current task is '${currentTaskText.textContent}'. Player's emotion is ${emotionValue}/100. Player's courage is ${courageValue}/100. Player's skills are: 自我認識 Lv${skills["self-awareness"]}, 表達能力 Lv${skills["expression"]}, 影片剪輯 Lv${skills["video-editing"]}, 心理韌性 Lv${skills["resilience"]}, 問題解決 Lv${skills["problem-solving"]}. Generate a short, encouraging, and relevant piece of advice from a teacher. Keep it concise, around 20-30 words. Respond in Traditional Chinese, without Pinyin or any Romanization. If the player is feeling low (emotion < 50), focus on emotional support. If courage is low (<50), focus on building confidence. If a specific skill is relevant to the current task, mention it.`;
+            const teacherAdvice = await callGeminiAPI(prompt);
+            showMessage(`老師給了你一些建議：『${teacherAdvice}』(信心+10)`, () => {
+                updateCourage(10);
+                updateSkill('problem-solving', 1);
+            });
+        });
+
+        getEncouragementButton.addEventListener('click', async () => {
+            showLoading("✨老師正在給予鼓勵...✨");
+            const prompt = `The player's current task is '${currentTaskText.textContent}'. Player's emotion is ${emotionValue}/100. Generate a short, deeply encouraging message from a teacher, focusing on boosting morale and self-belief. Keep it concise, around 15-25 words. Respond in Traditional Chinese, without Pinyin or any Romanization.`;
+            const encouragement = await callGeminiAPI(prompt);
+            showMessage(`老師說：『${encouragement}』(情緒+15)`, () => {
+                updateEmotion(15);
+            });
+        });
+
+        talkToTAButton.addEventListener('click', async () => {
+            showLoading("✨TA學姊正在協助中...✨");
+            const prompt = `The player's current task is '${currentTaskText.textContent}'. Player's skills are: 自我認識 Lv${skills["self-awareness"]}, 表達能力 Lv${skills["expression"]}, 影片剪輯 Lv${skills["video-editing"]}, 心理韌性 Lv${skills["resilience"]}, 問題解決 Lv${skills["problem-solving"]}. Generate a short, helpful assistance message from a TA, perhaps clarifying a task or offering a practical tip. Keep it concise, around 20-30 words. Respond in Traditional Chinese, without Pinyin or any Romanization.`;
+            const taAssistance = await callGeminiAPI(prompt);
+            showMessage(`TA學姊幫助你釐清了任務步驟：『${taAssistance}』(疲勞-5)`, () => {
+                // No direct fatigue impact, just a message
+                showMessage("你感覺精神好多了！");
+            });
+        });
+
+        getTaskHintButton.addEventListener('click', async () => {
+            showLoading("✨TA學姊正在提供提示...✨");
+            const prompt = `The player's current task is '${currentTaskText.textContent}'. Player's collected memory fragments are: ${collectedFragments.join(', ')}. Generate a short, specific task hint from a TA, guiding the player on how to proceed with their current task, possibly referencing collected fragments if relevant. Keep it concise, around 15-25 words. Respond in Traditional Chinese, without Pinyin or any Romanization.`;
+            const taskHint = await callGeminiAPI(prompt);
+            showMessage(`TA學姊給了你一個任務提示：『${taskHint}』`);
+        });
+
+        // Event listeners for the new interaction options
+        commonMemoryBtn.addEventListener('click', () => {
+            storyProgress = Math.min(100, storyProgress + 10); // Ensure progress doesn't exceed 100
+            updateProgressBar(storyProgressBar, storyProgress);
+            showMessage("你探索了共同回憶，生命故事進度 +10%！");
+        });
+        souvenirGridBtn.addEventListener('click', () => {
+            storyProgress = Math.min(100, storyProgress + 10);
+            updateProgressBar(storyProgressBar, storyProgress);
+            showMessage("你探索了紀念品九宮格，生命故事進度 +10%！");
+        });
+        lifeImageBtn.addEventListener('click', () => {
+            storyProgress = Math.min(100, storyProgress + 10);
+            updateProgressBar(storyProgressBar, storyProgress);
+            showMessage("你探索了生命圖像，生命故事進度 +10%！");
+        });
+        emotionTimelineBtn.addEventListener('click', () => {
+            storyProgress = Math.min(100, storyProgress + 10);
+            updateProgressBar(storyProgressBar, storyProgress);
+            showMessage("你探索了情緒年史，生命故事進度 +10%！");
+        });
+
+
+        listenToStoryButton.addEventListener('click', () => {
+            showMessage("你聆聽了隊友的故事，感同身受，也從中獲得了力量。(情緒+10)", () => {
+                updateEmotion(10);
+            });
+        });
+
+        completeSupportTaskButton.addEventListener('click', () => {
+            showMessage("你完成了支援與連結的互動！", () => {
+                currentTaskIndex++; // Advance to the Challenges Scene
+                nextTask();
+            });
+        });
+
+        // New event listener for motto input
+        confirmMottoButton.addEventListener('click', () => {
+            const motto = mottoInput.value.trim();
+            if (motto) {
+                personalMotto.textContent = `"${motto}"`;
+                showMessage("你的座右銘已設定！", () => {
+                    // Optionally disable input after setting
+                    mottoInput.disabled = true;
+                    confirmMottoButton.disabled = true;
+                });
+            } else {
+                showMessage("請輸入你的座右銘！");
+            }
+        });
+
+        proceedToEndingButton.addEventListener('click', () => {
+            currentTaskIndex++;
+            nextTask();
+        });
+
+        // Event listener for the new restart game button in growth scene
+        restartGameButtonGrowth.addEventListener('click', () => {
+            location.reload(); // Reloads the page to restart the game
+        });
+
+        // Event listener for the restart game button in ending scene
+        restartGameButtonEnding.addEventListener('click', () => {
+            location.reload(); // Reloads the page to restart the game
+        });
+
+        // Initial setup on window load
+        window.onload = function() {
+            loadingOverlay.style.opacity = '0';
+            loadingOverlay.style.pointerEvents = 'none';
+            initThreeJS();
+            animateThreeJS();
+            showScene(introScene);
+        };
+    </script>
+</body>
+</html>
