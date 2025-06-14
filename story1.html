@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<!-- saved from url=(0140)https://bd845a6y0ya3q838.canva-hosted-embed.com/codelet/AAEAEGJkODQ1YTZ5MHlhM3E4MzgAAAAAAZdz0iP2toLyCH97ssENeLVX_XvPBTcr-c2WGpplLKQhJx-x9D8/ -->
+<html lang="zh"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>靈魂之井：記憶的守護者</title>
+    <script src="./saved_resource"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        .visual-novel {
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95)), 
+                              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='800' height='600' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+            background-size: cover;
+            min-height: 100vh;
+        }
+        
+        .choice-btn {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            border: 1px solid #475569;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .choice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            border-color: #60a5fa;
+        }
+        
+        .text-box {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid #334155;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .character {
+            transition: all 0.5s ease;
+        }
+        
+        .scene-transition {
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .crystal {
+            position: absolute;
+            width: 120px;
+            height: 200px;
+            opacity: 0.7;
+            filter: blur(1px);
+            transform-style: preserve-3d;
+            animation: crystalGlow 4s infinite alternate;
+        }
+        
+        @keyframes crystalGlow {
+            0% { filter: blur(1px) brightness(0.8); }
+            100% { filter: blur(2px) brightness(1.2); }
+        }
+        
+        .ending-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .ending-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+        
+        .title-text {
+            background: linear-gradient(to right, #e2e8f0, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.left-20{left:5rem}.right-40{right:10rem}.top-20{top:5rem}.top-40{top:10rem}.z-10{z-index:10}.mx-4{margin-left:1rem;margin-right:1rem}.my-6{margin-top:1.5rem;margin-bottom:1.5rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-6{margin-top:1.5rem}.flex{display:flex}.hidden{display:none}.h-1{height:0.25rem}.h-full{height:100%}.min-h-screen{min-height:100vh}.w-0{width:0px}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.flex-1{flex:1 1 0%}.flex-grow{flex-grow:1}.flex-col{flex-direction:column}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t-xl{border-top-left-radius:0.75rem;border-top-right-radius:0.75rem}.border-t{border-top-width:1px}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.text-center{text-align:center}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.text-blue-300{--tw-text-opacity:1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.opacity-30{opacity:0.3}@media (min-width: 768px){.md\:mt-0{margin-top:0px}.md\:flex-row{flex-direction:row}.md\:text-6xl{font-size:3.75rem;line-height:1}}</style></head>
+<body>
+    <div class="visual-novel relative min-h-screen flex flex-col">
+        <!-- Crystal Background Elements -->
+        <div class="crystal absolute top-20 left-20" style="background: radial-gradient(ellipse at center, rgba(147, 197, 253, 0.4) 0%, rgba(59, 130, 246, 0.1) 70%, rgba(29, 78, 216, 0) 100%);"></div>
+        <div class="crystal absolute top-40 right-40" style="background: radial-gradient(ellipse at center, rgba(196, 181, 253, 0.4) 0%, rgba(139, 92, 246, 0.1) 70%, rgba(76, 29, 149, 0) 100%);"></div>
+        
+        <!-- Title Screen -->
+        <div id="title-screen" class="flex flex-col items-center justify-center min-h-screen z-10 px-4">
+            <h1 class="title-text text-5xl md:text-6xl font-bold mb-6 text-center">靈魂之井：記憶的守護者</h1>
+            <p class="text-slate-300 text-xl mb-12 max-w-2xl text-center">一段關於記憶、創傷與靈性修復的旅程</p>
+            <button id="start-btn" class="choice-btn text-xl px-8 py-4 rounded-lg font-medium text-white">開始旅程</button>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden flex-1 flex flex-col">
+            <!-- Progress Bar -->
+            <div class="w-full h-1 bg-slate-800">
+                <div id="progress-bar" class="progress-bar w-0"></div>
+            </div>
+            
+            <!-- Scene Area -->
+            <div class="flex-1 relative">
+                <!-- Background Scene -->
+                <div id="scene-bg" class="absolute inset-0 flex items-center justify-center">
+                    <svg id="scene-svg" class="w-full h-full opacity-30" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Dynamic SVG content will be inserted here -->
+                    </svg>
+                </div>
+                
+                <!-- Characters -->
+                <div id="characters" class="absolute inset-0 flex items-end justify-center">
+                    <!-- Character SVGs will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Text Box -->
+            <div class="text-box rounded-t-xl p-6 mx-4 mb-4 z-10">
+                <div class="flex items-center mb-3">
+                    <div id="speaker" class="text-xl font-semibold text-blue-300"></div>
+                    <div class="flex-grow"></div>
+                    <div class="text-sm text-slate-400">點擊繼續</div>
+                </div>
+                <p id="dialogue" class="text-lg leading-relaxed mb-6"></p>
+                
+                <!-- Choices -->
+                <div id="choices" class="hidden flex flex-col space-y-3">
+                    <!-- Choice buttons will be inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ending Screen -->
+        <div id="ending-screen" class="hidden flex flex-col items-center justify-center min-h-screen z-10 px-4 py-12">
+            <h2 id="ending-title" class="title-text text-4xl font-bold mb-6 text-center"></h2>
+            <div id="ending-card" class="ending-card rounded-xl p-8 max-w-3xl">
+                <p id="ending-description" class="text-lg leading-relaxed mb-6"></p>
+                <div class="border-t border-slate-700 my-6"></div>
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">你的選擇之路</h3>
+                        <p id="ending-path" class="text-slate-300"></p>
+                    </div>
+                    <button id="restart-btn" class="choice-btn mt-6 md:mt-0 px-6 py-3 rounded-lg font-medium text-white">重新開始</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            currentScene: 0,
+            dialogueIndex: 0,
+            path: {
+                startingPoint: null,
+                conflict: null
+            },
+            showingChoices: false
+        };
+        
+        // Game content
+        const gameContent = {
+            scenes: [
+                {
+                    background: "village",
+                    dialogues: [
+                        { speaker: "旁白", text: "在遠古的靈魂部落，祖靈之井是族人與記憶交流的神聖之地。" },
+                        { speaker: "旁白", text: "玄棘，部落的靈語師，負責守護這片靈場，維持族人與祖靈的連結。" },
+                        { speaker: "旁白", text: "然而近日，祖靈之井開始動盪，族人的夢境被噩夢侵蝕，語言能力逐漸消失。" },
+                        { speaker: "玄棘", text: "（沉思）靈場的裂痕越來越大，我必須找出原因..." },
+                        { speaker: "蜜糖", text: "玄棘，族人們都很擔心。你確定知道發生了什麼嗎？" },
+                        { speaker: "玄棘", text: "我需要進入靈場核心，那裡有答案。" },
+                        { speaker: "", text: "面對這場危機，你將如何行動？" }
+                    ],
+                    choices: [
+                        { text: "獨自探查靈場", nextScene: 1, path: "startingPoint1" },
+                        { text: "邀請蜜糖一同前往", nextScene: 2, path: "startingPoint2" }
+                    ]
+                },
+                {
+                    // 獨自探查路線
+                    background: "spiritField",
+                    dialogues: [
+                        { speaker: "玄棘", text: "這是我的責任，我必須獨自面對。" },
+                        { speaker: "蜜糖", text: "但是...靈場現在很不穩定，一個人太危險了。" },
+                        { speaker: "玄棘", text: "正因如此，我不能讓你冒險。請你照顧好族人。" },
+                        { speaker: "旁白", text: "玄棘獨自踏入靈場深處，空氣中彌漫著不安的靈壓。" },
+                        { speaker: "玄棘", text: "（感知）靈場的核心在顫抖...記憶之井的封印出現了裂痕。" },
+                        { speaker: "旁白", text: "隨著深入，玄棘感到一股熟悉又陌生的力量在呼喚他。" },
+                        { speaker: "玄棘", text: "這感覺...像是被遺忘的記憶。" },
+                        { speaker: "旁白", text: "突然，靈場震動，一個選擇擺在眼前..." }
+                    ],
+                    choices: [
+                        { text: "面對浮現的幻象", nextScene: 3, path: "conflict1" },
+                        { text: "回應蜜糖的呼喚", nextScene: 4, path: "conflict2" },
+                        { text: "直接修復封印核心", nextScene: 5, path: "conflict3" }
+                    ]
+                },
+                {
+                    // 攜手同行路線
+                    background: "spiritFieldTogether",
+                    dialogues: [
+                        { speaker: "玄棘", text: "蜜糖，我需要你的幫助。兩個靈語師的力量會更穩定。" },
+                        { speaker: "蜜糖", text: "我就知道你會這麼說。我們一起面對。" },
+                        { speaker: "旁白", text: "兩人手牽手，進入靈場深處。他們的靈核共鳴，形成一道保護屏障。" },
+                        { speaker: "蜜糖", text: "玄棘，你感覺到了嗎？靈場在...哭泣。" },
+                        { speaker: "玄棘", text: "是的，記憶之井的封印正在崩解。我們必須找到源頭。" },
+                        { speaker: "旁白", text: "隨著深入，靈場的景象變得扭曲，記憶碎片如雨般落下。" },
+                        { speaker: "蜜糖", text: "這些記憶...有些是你的？" },
+                        { speaker: "玄棘", text: "（震驚）不可能...這些被封印的記憶不應該出現。" },
+                        { speaker: "旁白", text: "靈場中央，一個巨大的水晶核心裂痕擴大，三條路徑浮現..." }
+                    ],
+                    choices: [
+                        { text: "直面記憶幻象", nextScene: 6, path: "conflict1" },
+                        { text: "回應蜜糖的質疑", nextScene: 7, path: "conflict2" },
+                        { text: "共同修復封印", nextScene: 8, path: "conflict3" }
+                    ]
+                },
+                {
+                    // 結局一：獨自探查 × 面對幻象
+                    background: "ending1",
+                    dialogues: [
+                        { speaker: "旁白", text: "玄棘選擇獨自面對浮現的幻象，那是他深埋的創傷記憶。" },
+                        { speaker: "玄棘", text: "這不是真的...這些都是過去的事了！" },
+                        { speaker: "旁白", text: "他拒絕承認過去的痛苦，試圖以意志壓制幻象。" },
+                        { speaker: "旁白", text: "然而，越是抗拒，荊棘幻獸越發強大，開始反噬他的記憶核心。" },
+                        { speaker: "玄棘", text: "不...停下...我不是...我沒有..." },
+                        { speaker: "旁白", text: "靈場劇烈震盪，玄棘與祖靈之井的連結斷裂。" },
+                        { speaker: "旁白", text: "他的意識被記憶洪流吞噬，肉身化為靈繭，沉入井底。" },
+                        { speaker: "蜜糖", text: "玄棘！不！" },
+                        { speaker: "旁白", text: "蜜糖趕到時，一切已經太遲。" },
+                        { speaker: "旁白", text: "隨著玄棘的封印，族人逐漸失去語言與夢境能力。" },
+                        { speaker: "旁白", text: "蜜糖成為唯一的見證者，帶著未竟的對話與深深的愧疚離開了部落。" }
+                    ],
+                    ending: {
+                        title: "結局一：封印爆裂，玄棘沉入記憶深淵",
+                        description: "玄棘選擇獨自戰鬥幻象，拒絕承認過去創傷。荊棘幻獸反噬記憶核心，導致他心靈與祖靈之井的連結斷裂。整個靈場劇烈震盪，他最終被記憶吞噬，肉身化為靈繭封印在井底。族人逐漸失去語言與夢境能力，蜜糖只能帶著愧疚與未竟的對話離開，成為唯一見證者。",
+                        path: "獨自探查 × 面對幻象"
+                    }
+                },
+                {
+                    // 結局二：獨自探查 × 蜜糖的質疑
+                    background: "ending2",
+                    dialogues: [
+                        { speaker: "旁白", text: "玄棘獨自探查靈場，卻聽到蜜糖的呼喚聲。" },
+                        { speaker: "蜜糖", text: "玄棘！我感應到靈場的異常，跟著你的靈跡來了。" },
+                        { speaker: "玄棘", text: "你不該來的！這裡太危險了。" },
+                        { speaker: "旁白", text: "蜜糖強行闖入靈場，看到了浮現的記憶碎片。" },
+                        { speaker: "蜜糖", text: "這些是...你的記憶？你一直隱瞞著什麼？" },
+                        { speaker: "玄棘", text: "這不關你的事！離開這裡！" },
+                        { speaker: "旁白", text: "面對蜜糖的質疑，玄棘選擇疏離，並封鎖兩人間的靈性連結。" },
+                        { speaker: "蜜糖", text: "（痛苦）你不信任我...從來都不信任我..." },
+                        { speaker: "旁白", text: "靈壓反噬，蜜糖失去了對玄棘情感的信任。" },
+                        { speaker: "旁白", text: "兩人之間的靈性交會徹底崩解，記憶之井化為死水。" },
+                        { speaker: "旁白", text: "部落再無人能通靈，祖靈消聲匿跡，族人陷入世代沉默。" }
+                    ],
+                    ending: {
+                        title: "結局二：關係決裂，記憶徹底斷裂",
+                        description: "玄棘起初獨自行動，途中蜜糖強行闖入靈場，發現其過去創傷。面對蜜糖質疑，玄棘選擇疏離並封鎖連結。蜜糖因為靈壓反噬而失去對他情感的信任，兩人之間的靈性交會徹底崩解。靈場雖未崩毀，但記憶之井化為死水，部落再無人能通靈。祖靈消聲匿跡，族人陷入世代沉默。",
+                        path: "獨自探查 × 蜜糖的質疑"
+                    }
+                },
+                {
+                    // 結局三：獨自探查 × 封印之核
+                    background: "ending3",
+                    dialogues: [
+                        { speaker: "旁白", text: "玄棘直接前往靈場核心，看到破裂的水晶封印。" },
+                        { speaker: "玄棘", text: "必須立刻修復，否則整個靈場都會崩塌。" },
+                        { speaker: "旁白", text: "他集中全部意志力，強化封印，壓制即將爆發的記憶洪流。" },
+                        { speaker: "玄棘", text: "（痛苦）我...可以...承受..." },
+                        { speaker: "旁白", text: "封印暫時穩定，靈場恢復平靜，族人的症狀也得到緩解。" },
+                        { speaker: "旁白", text: "然而，玄棘的身心被荊棘反噬，表面無恙，內在卻已空洞。" },
+                        { speaker: "蜜糖", text: "玄棘，你還好嗎？你看起來...不一樣了。" },
+                        { speaker: "玄棘", text: "（機械地）我很好。靈場已經穩定。" },
+                        { speaker: "旁白", text: "他失去了情感與記憶能力，如機械般維持著部落秩序。" },
+                        { speaker: "旁白", text: "數年後，整個部落開始失去夢與願景，成為靈性之網裡的無聲者。" },
+                        { speaker: "旁白", text: "玄棘成為了靈場的「活體守衛」，永遠困在自己築起的牢籠中。" }
+                    ],
+                    ending: {
+                        title: "結局三：短暫平靜，靈魂逐漸腐化",
+                        description: "玄棘強化封印，以意志封住破裂水晶。靈場恢復穩定，族人暫時康復，但玄棘的身心被荊棘反噬，表面無恙卻失去情感與記憶能力。他如機械般維持部落秩序，成為靈場的「活體守衛」。而整個部落在數年後開始失去夢與願景，成為靈性之網裡的無聲者。",
+                        path: "獨自探查 × 封印之核"
+                    }
+                },
+                {
+                    // 結局四：攜手同行 × 面對幻象
+                    background: "ending4",
+                    dialogues: [
+                        { speaker: "旁白", text: "玄棘與蜜糖選擇直面記憶幻象，那是玄棘深埋的創傷。" },
+                        { speaker: "玄棘", text: "（顫抖）這些記憶...我一直試圖忘記..." },
+                        { speaker: "蜜糖", text: "我在這裡，玄棘。我們一起面對。" },
+                        { speaker: "旁白", text: "在蜜糖的陪伴下，玄棘選擇傾聽過去的聲音。" },
+                        { speaker: "旁白", text: "兩人共同經歷記憶洪流，身心幾近崩潰。" },
+                        { speaker: "蜜糖", text: "接受它，不要抗拒...讓它流過你，而不是淹沒你。" },
+                        { speaker: "旁白", text: "蜜糖主動共享自己的靈核力量，與玄棘合力重塑記憶之井。" },
+                        { speaker: "玄棘", text: "（釋然）謝謝你...沒有你，我無法面對這一切。" },
+                        { speaker: "旁白", text: "靈場因此重構，祖靈記憶融入部落之歌。" },
+                        { speaker: "旁白", text: "族人開始學習與過往創傷共存，開啟新的篇章。" },
+                        { speaker: "旁白", text: "玄棘與蜜糖成為新的「夢語引者」，引導族人療癒內心傷痕。" }
+                    ],
+                    ending: {
+                        title: "結局四：共感創傷，靈場重生",
+                        description: "面對記憶幻象，玄棘在蜜糖陪伴下選擇傾聽過去，兩人共歷記憶洪流，身心幾近崩潰。蜜糖主動共享自己的靈核力量，與玄棘合力重塑記憶之井。靈場因此重構，祖靈記憶融入部落之歌，開啟族人與過往創傷共存的新篇章。玄棘與蜜糖成為新的「夢語引者」。",
+                        path: "攜手同行 × 面對幻象"
+                    }
+                },
+                {
+                    // 結局五：攜手同行 × 蜜糖的質疑
+                    background: "ending5",
+                    dialogues: [
+                        { speaker: "蜜糖", text: "玄棘，這些記憶...你從未告訴過我。為什麼要隱瞞？" },
+                        { speaker: "玄棘", text: "（猶豫）我...我害怕面對。害怕你知道後會離開。" },
+                        { speaker: "旁白", text: "玄棘最終選擇坦白創傷真相，蜜糖流淚擁抱他。" },
+                        { speaker: "蜜糖", text: "傻瓜...你的過去不會改變我對你的感情。" },
+                        { speaker: "旁白", text: "兩人關係進入深度共鳴，靈場核心因此打開。" },
+                        { speaker: "旁白", text: "然而，水晶中湧出遠古怨靈，需有一人承受封印代價。" },
+                        { speaker: "玄棘", text: "這是我的責任，我來承擔。" },
+                        { speaker: "蜜糖", text: "不！一定有其他方法！" },
+                        { speaker: "玄棘", text: "沒有時間了...記住我，傳承我們的記憶。" },
+                        { speaker: "旁白", text: "玄棘選擇獻出自我，靈魂永遠守護靈場。" },
+                        { speaker: "旁白", text: "蜜糖繼承他的記憶與語言，成為族群唯一能引導靈性修復者。" },
+                        { speaker: "旁白", text: "族人得以延續記憶之歌，但代價是永恆的懷念。" }
+                    ],
+                    ending: {
+                        title: "結局五：坦承後的犧牲與傳承",
+                        description: "玄棘坦白創傷真相，蜜糖流淚擁抱他。兩人關係進入深度共鳴，靈場核心因此打開。然而水晶中湧出遠古怨靈，需有一人承受封印代價。玄棘選擇獻出自我，靈魂永遠守護靈場，而蜜糖則繼承他的記憶與語言，成為族群唯一能引導靈性修復者。族人得以延續記憶之歌，但代價是永恆懷念。",
+                        path: "攜手同行 × 蜜糖的質疑"
+                    }
+                },
+                {
+                    // 結局六：攜手同行 × 封印之核
+                    background: "ending6",
+                    dialogues: [
+                        { speaker: "玄棘", text: "這封印...是我多年前設下的。" },
+                        { speaker: "蜜糖", text: "為什麼要封印記憶？" },
+                        { speaker: "玄棘", text: "因為痛苦太深，我無法承受。" },
+                        { speaker: "蜜糖", text: "但現在封印已經破損，我們必須面對它。" },
+                        { speaker: "旁白", text: "兩人共同決定釋放封印，玄棘在蜜糖鼓勵下直視過去所有痛苦與脆弱。" },
+                        { speaker: "玄棘", text: "（痛苦）我...我不確定我能承受..." },
+                        { speaker: "蜜糖", text: "我們一起。你不是一個人。" },
+                        { speaker: "旁白", text: "水晶碎裂時，玄棘的靈魂一度解離，但蜜糖將兩人靈核編織為一道共鳴繭。" },
+                        { speaker: "旁白", text: "祖靈的歌聲再次響徹靈場，記憶之井化為一座靈性圖書館。" },
+                        { speaker: "旁白", text: "族人重拾與夢境對話的能力，不再逃避內在裂痕。" },
+                        { speaker: "旁白", text: "玄棘與蜜糖攜手成為靈場的守望者，引領下一代面對自我。" }
+                    ],
+                    ending: {
+                        title: "結局六：共同釋放，靈性再生",
+                        description: "兩人共同決定釋放封印，玄棘在蜜糖鼓勵下直視過去所有痛苦與脆弱。水晶碎裂時，他的靈魂一度解離，但蜜糖將兩人靈核編織為一道共鳴繭，使他得以重生。祖靈的歌聲再次響徹靈場，記憶之井化為一座靈性圖書館，族人重拾與夢境對話的能力。兩人攜手成為靈場的守望者，引領下一代不再逃避內在裂痕。",
+                        path: "攜手同行 × 封印之核"
+                    }
+                }
+            ]
+        };
+        
+        // SVG backgrounds for different scenes
+        const backgrounds = {
+            village: `
+                <rect width="100%" height="100%" fill="url(#villageGradient)" />
+                <defs>
+                    <radialGradient id="villageGradient" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#3b4a6b" />
+                        <stop offset="100%" stop-color="#1e293b" />
+                    </radialGradient>
+                </defs>
+                <circle cx="400" cy="150" r="80" fill="url(#moonGlow)" />
+                <defs>
+                    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#f8fafc" />
+                        <stop offset="80%" stop-color="#cbd5e1" />
+                        <stop offset="100%" stop-color="#94a3b8" />
+                    </radialGradient>
+                </defs>
+                <path d="M0,400 C100,380 200,420 300,390 C400,360 500,400 600,380 C700,360 800,390 800,400 L800,500 L0,500 Z" fill="#1e293b" />
+                <path d="M100,400 L150,320 L200,400 Z" fill="#0f172a" />
+                <path d="M300,400 L350,300 L400,400 Z" fill="#0f172a" />
+                <path d="M500,400 L550,310 L600,400 Z" fill="#0f172a" />
+                <path d="M650,400 L700,330 L750,400 Z" fill="#0f172a" />
+            `,
+            spiritField: `
+                <rect width="100%" height="100%" fill="url(#spiritGradient)" />
+                <defs>
+                    <linearGradient id="spiritGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#1e1b4b" />
+                        <stop offset="100%" stop-color="#312e81" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="120" fill="url(#wellGlow)" opacity="0.7" />
+                <defs>
+                    <radialGradient id="wellGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#818cf8" />
+                        <stop offset="70%" stop-color="#4f46e5" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#312e81" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M320,200 C360,180 440,180 480,200 C520,220 520,280 480,300 C440,320 360,320 320,300 C280,280 280,220 320,200 Z" fill="none" stroke="#818cf8" stroke-width="2" opacity="0.8" />
+                <path d="M340,210 C370,195 430,195 460,210 C490,225 490,275 460,290 C430,305 370,305 340,290 C310,275 310,225 340,210 Z" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.6" />
+                <g opacity="0.8">
+                    ${Array.from({length: 20}, (_, i) => {
+                        const x = 300 + Math.random() * 200;
+                        const y = 150 + Math.random() * 200;
+                        const size = 1 + Math.random() * 3;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#a5b4fc" />`;
+                    }).join('')}
+                </g>
+            `,
+            spiritFieldTogether: `
+                <rect width="100%" height="100%" fill="url(#spiritTogetherGradient)" />
+                <defs>
+                    <linearGradient id="spiritTogetherGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#1e1b4b" />
+                        <stop offset="100%" stop-color="#312e81" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="120" fill="url(#wellGlowTogether)" opacity="0.7" />
+                <defs>
+                    <radialGradient id="wellGlowTogether" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#818cf8" />
+                        <stop offset="70%" stop-color="#4f46e5" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#312e81" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M320,200 C360,180 440,180 480,200 C520,220 520,280 480,300 C440,320 360,320 320,300 C280,280 280,220 320,200 Z" fill="none" stroke="#818cf8" stroke-width="2" opacity="0.8" />
+                <path d="M340,210 C370,195 430,195 460,210 C490,225 490,275 460,290 C430,305 370,305 340,290 C310,275 310,225 340,210 Z" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.6" />
+                <path d="M300,350 C350,330 450,330 500,350" stroke="#a5b4fc" stroke-width="2" fill="none" opacity="0.6" />
+                <g opacity="0.8">
+                    ${Array.from({length: 30}, (_, i) => {
+                        const x = 300 + Math.random() * 200;
+                        const y = 150 + Math.random() * 200;
+                        const size = 1 + Math.random() * 3;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#a5b4fc" />`;
+                    }).join('')}
+                </g>
+            `,
+            ending1: `
+                <rect width="100%" height="100%" fill="url(#ending1Gradient)" />
+                <defs>
+                    <linearGradient id="ending1Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#18181b" />
+                        <stop offset="100%" stop-color="#27272a" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="100" fill="url(#darkWellGlow)" opacity="0.5" />
+                <defs>
+                    <radialGradient id="darkWellGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#3f3f46" />
+                        <stop offset="70%" stop-color="#27272a" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#18181b" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M350,200 C400,150 450,200 450,250 C450,300 400,350 350,300 C300,250 300,250 350,200 Z" fill="none" stroke="#52525b" stroke-width="2" opacity="0.6" />
+                <g opacity="0.5">
+                    ${Array.from({length: 10}, (_, i) => {
+                        const x = 350 + Math.random() * 100;
+                        const y = 200 + Math.random() * 100;
+                        return `<path d="M${x},${y} L${x+10},${y+20} L${x-10},${y+20} Z" fill="#71717a" />`;
+                    }).join('')}
+                </g>
+            `,
+            ending2: `
+                <rect width="100%" height="100%" fill="url(#ending2Gradient)" />
+                <defs>
+                    <linearGradient id="ending2Gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1e293b" />
+                        <stop offset="100%" stop-color="#0f172a" />
+                    </linearGradient>
+                </defs>
+                <line x1="200" y1="150" x2="600" y2="350" stroke="#475569" stroke-width="2" opacity="0.6" />
+                <line x1="600" y1="150" x2="200" y2="350" stroke="#475569" stroke-width="2" opacity="0.6" />
+                <circle cx="300" cy="200" r="50" fill="none" stroke="#64748b" stroke-width="1" opacity="0.7" />
+                <circle cx="500" cy="300" r="50" fill="none" stroke="#64748b" stroke-width="1" opacity="0.7" />
+                <g opacity="0.4">
+                    ${Array.from({length: 20}, (_, i) => {
+                        const x = 200 + Math.random() * 400;
+                        const y = 150 + Math.random() * 200;
+                        const size = 1 + Math.random() * 2;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#94a3b8" />`;
+                    }).join('')}
+                </g>
+            `,
+            ending3: `
+                <rect width="100%" height="100%" fill="url(#ending3Gradient)" />
+                <defs>
+                    <linearGradient id="ending3Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#0c4a6e" />
+                        <stop offset="100%" stop-color="#082f49" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="80" fill="url(#crystalGlow)" opacity="0.6" />
+                <defs>
+                    <radialGradient id="crystalGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#0ea5e9" />
+                        <stop offset="70%" stop-color="#0284c7" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#0c4a6e" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M370,210 L400,180 L430,210 L430,290 L400,320 L370,290 Z" fill="none" stroke="#0ea5e9" stroke-width="2" opacity="0.8" />
+                <path d="M380,220 L400,200 L420,220 L420,280 L400,300 L380,280 Z" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.6" />
+                <g opacity="0.5">
+                    ${Array.from({length: 15}, (_, i) => {
+                        const x = 350 + Math.random() * 100;
+                        const y = 200 + Math.random() * 100;
+                        const size = 1 + Math.random() * 2;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#38bdf8" />`;
+                    }).join('')}
+                </g>
+            `,
+            ending4: `
+                <rect width="100%" height="100%" fill="url(#ending4Gradient)" />
+                <defs>
+                    <linearGradient id="ending4Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#4a044e" />
+                        <stop offset="100%" stop-color="#701a75" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="100" fill="url(#rebirthGlow)" opacity="0.7" />
+                <defs>
+                    <radialGradient id="rebirthGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#d946ef" />
+                        <stop offset="70%" stop-color="#a21caf" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#701a75" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M350,200 C380,180 420,180 450,200 C480,220 480,280 450,300 C420,320 380,320 350,300 C320,280 320,220 350,200 Z" fill="none" stroke="#d946ef" stroke-width="2" opacity="0.8" />
+                <path d="M360,210 C385,195 415,195 440,210 C465,225 465,275 440,290 C415,305 385,305 360,290 C335,275 335,225 360,210 Z" fill="none" stroke="#d946ef" stroke-width="1" opacity="0.6" />
+                <g opacity="0.8">
+                    ${Array.from({length: 30}, (_, i) => {
+                        const x = 300 + Math.random() * 200;
+                        const y = 150 + Math.random() * 200;
+                        const size = 1 + Math.random() * 3;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#e879f9" />`;
+                    }).join('')}
+                </g>
+            `,
+            ending5: `
+                <rect width="100%" height="100%" fill="url(#ending5Gradient)" />
+                <defs>
+                    <linearGradient id="ending5Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#581c87" />
+                        <stop offset="100%" stop-color="#7e22ce" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="100" fill="url(#sacrificeGlow)" opacity="0.7" />
+                <defs>
+                    <radialGradient id="sacrificeGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#a855f7" />
+                        <stop offset="70%" stop-color="#7e22ce" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#581c87" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M350,200 C400,150 450,200 450,250 C450,300 400,350 350,300 C300,250 300,250 350,200 Z" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.8" />
+                <path d="M370,210 C400,180 430,210 430,250 C430,290 400,320 370,290 C340,260 340,240 370,210 Z" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.6" />
+                <g opacity="0.6">
+                    ${Array.from({length: 25}, (_, i) => {
+                        const x = 300 + Math.random() * 200;
+                        const y = 150 + Math.random() * 200;
+                        const size = 1 + Math.random() * 3;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#c084fc" />`;
+                    }).join('')}
+                </g>
+            `,
+            ending6: `
+                <rect width="100%" height="100%" fill="url(#ending6Gradient)" />
+                <defs>
+                    <linearGradient id="ending6Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#1e40af" />
+                        <stop offset="100%" stop-color="#3b82f6" />
+                    </linearGradient>
+                </defs>
+                <circle cx="400" cy="250" r="120" fill="url(#libraryGlow)" opacity="0.7" />
+                <defs>
+                    <radialGradient id="libraryGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" stop-color="#93c5fd" />
+                        <stop offset="70%" stop-color="#3b82f6" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#1e40af" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <path d="M320,200 C360,180 440,180 480,200 C520,220 520,280 480,300 C440,320 360,320 320,300 C280,280 280,220 320,200 Z" fill="none" stroke="#93c5fd" stroke-width="2" opacity="0.8" />
+                <path d="M340,210 C370,195 430,195 460,210 C490,225 490,275 460,290 C430,305 370,305 340,290 C310,275 310,225 340,210 Z" fill="none" stroke="#93c5fd" stroke-width="1" opacity="0.6" />
+                <g opacity="0.8">
+                    ${Array.from({length: 40}, (_, i) => {
+                        const x = 300 + Math.random() * 200;
+                        const y = 150 + Math.random() * 200;
+                        const size = 1 + Math.random() * 3;
+                        return `<circle cx="${x}" cy="${y}" r="${size}" fill="#bfdbfe" />`;
+                    }).join('')}
+                </g>
+            `
+        };
+        
+        // Character SVGs
+        const characters = {
+            xuanji: `
+                <svg width="200" height="300" viewBox="0 0 200 300" class="character character-xuanji">
+                    <defs>
+                        <radialGradient id="xuanjiAura" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
+                            <stop offset="100%" stop-color="#1e40af" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                    <circle cx="100" cy="150" r="80" fill="url(#xuanjiAura)" />
+                    <path d="M80,80 C90,70 110,70 120,80 C130,90 130,100 120,110 C110,120 90,120 80,110 C70,100 70,90 80,80 Z" fill="#1e293b" />
+                    <path d="M85,85 C92,78 108,78 115,85 C122,92 122,100 115,107 C108,114 92,114 85,107 C78,100 78,92 85,85 Z" fill="#334155" />
+                    <circle cx="90" cy="90" r="3" fill="#3b82f6" />
+                    <circle cx="110" cy="90" r="3" fill="#3b82f6" />
+                    <path d="M95,100 C98,102 102,102 105,100" stroke="#94a3b8" stroke-width="1" fill="none" />
+                    <path d="M70,120 C80,140 120,140 130,120" stroke="#334155" stroke-width="2" fill="none" />
+                    <path d="M70,140 C90,180 110,180 130,140" fill="#334155" />
+                    <path d="M70,180 L60,220 M130,180 L140,220" stroke="#334155" stroke-width="2" fill="none" />
+                </svg>
+            `,
+            honey: `
+                <svg width="200" height="300" viewBox="0 0 200 300" class="character character-honey">
+                    <defs>
+                        <radialGradient id="honeyAura" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3" />
+                            <stop offset="100%" stop-color="#b45309" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                    <circle cx="100" cy="150" r="80" fill="url(#honeyAura)" />
+                    <path d="M80,80 C90,70 110,70 120,80 C130,90 130,100 120,110 C110,120 90,120 80,110 C70,100 70,90 80,80 Z" fill="#1e293b" />
+                    <path d="M85,85 C92,78 108,78 115,85 C122,92 122,100 115,107 C108,114 92,114 85,107 C78,100 78,92 85,85 Z" fill="#422006" />
+                    <circle cx="90" cy="90" r="3" fill="#f59e0b" />
+                    <circle cx="110" cy="90" r="3" fill="#f59e0b" />
+                    <path d="M95,100 C98,103 102,103 105,100" stroke="#fbbf24" stroke-width="1" fill="none" />
+                    <path d="M70,120 C80,140 120,140 130,120" stroke="#422006" stroke-width="2" fill="none" />
+                    <path d="M70,140 C90,180 110,180 130,140" fill="#422006" />
+                    <path d="M70,180 L60,220 M130,180 L140,220" stroke="#422006" stroke-width="2" fill="none" />
+                </svg>
+            `
+        };
+        
+        // DOM elements
+        const titleScreen = document.getElementById('title-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const endingScreen = document.getElementById('ending-screen');
+        const startBtn = document.getElementById('start-btn');
+        const speaker = document.getElementById('speaker');
+        const dialogue = document.getElementById('dialogue');
+        const choices = document.getElementById('choices');
+        const sceneBg = document.getElementById('scene-bg');
+        const sceneSvg = document.getElementById('scene-svg');
+        const charactersContainer = document.getElementById('characters');
+        const progressBar = document.getElementById('progress-bar');
+        const endingTitle = document.getElementById('ending-title');
+        const endingDescription = document.getElementById('ending-description');
+        const endingPath = document.getElementById('ending-path');
+        const endingCard = document.getElementById('ending-card');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        gameScreen.addEventListener('click', advanceDialogue);
+        restartBtn.addEventListener('click', () => {
+            endingScreen.classList.add('hidden');
+            titleScreen.classList.remove('hidden');
+        });
+        
+        // Game functions
+        function startGame() {
+            titleScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            gameScreen.classList.add('flex');
+            
+            // Reset game state
+            gameState.currentScene = 0;
+            gameState.dialogueIndex = 0;
+            gameState.path = {
+                startingPoint: null,
+                conflict: null
+            };
+            
+            // Load first scene
+            loadScene(gameState.currentScene);
+        }
+        
+        function loadScene(sceneIndex) {
+            const scene = gameContent.scenes[sceneIndex];
+            
+            // Update background
+            sceneSvg.innerHTML = backgrounds[scene.background];
+            
+            // Reset dialogue index
+            gameState.dialogueIndex = 0;
+            
+            // Show first dialogue
+            showDialogue();
+            
+            // Update progress
+            updateProgress();
+        }
+        
+        function showDialogue() {
+            const scene = gameContent.scenes[gameState.currentScene];
+            const currentDialogue = scene.dialogues[gameState.dialogueIndex];
+            
+            // Update speaker and dialogue
+            speaker.textContent = currentDialogue.speaker;
+            dialogue.textContent = currentDialogue.text;
+            
+            // Hide choices
+            choices.classList.add('hidden');
+            gameState.showingChoices = false;
+            
+            // Show characters based on speaker
+            updateCharacters(currentDialogue.speaker);
+            
+            // Check if this is the last dialogue
+            if (gameState.dialogueIndex === scene.dialogues.length - 1 && scene.choices) {
+                showChoices();
+            }
+        }
+        
+        function updateCharacters(speakerName) {
+            charactersContainer.innerHTML = '';
+            
+            if (speakerName === "玄棘") {
+                charactersContainer.innerHTML = characters.xuanji;
+                const xuanjiChar = document.querySelector('.character-xuanji');
+                xuanjiChar.style.transform = 'translateX(-50px)';
+            } else if (speakerName === "蜜糖") {
+                charactersContainer.innerHTML = characters.honey;
+                const honeyChar = document.querySelector('.character-honey');
+                honeyChar.style.transform = 'translateX(50px)';
+            } else if (speakerName === "") {
+                // Both characters for choice scenes
+                if (gameState.currentScene === 0 || 
+                    (gameState.path && gameState.path.startingPoint === "startingPoint2")) {
+                    charactersContainer.innerHTML = characters.xuanji + characters.honey;
+                    const xuanjiChar = document.querySelector('.character-xuanji');
+                    const honeyChar = document.querySelector('.character-honey');
+                    xuanjiChar.style.transform = 'translateX(-80px)';
+                    honeyChar.style.transform = 'translateX(80px)';
+                }
+            }
+        }
+        
+        function showChoices() {
+            const scene = gameContent.scenes[gameState.currentScene];
+            
+            // Clear and show choices container
+            choices.innerHTML = '';
+            choices.classList.remove('hidden');
+            gameState.showingChoices = true;
+            
+            // Create choice buttons
+            scene.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.textContent = choice.text;
+                button.classList.add('choice-btn', 'px-4', 'py-3', 'rounded-lg', 'text-white', 'text-lg', 'font-medium');
+                button.addEventListener('click', () => makeChoice(choice));
+                choices.appendChild(button);
+            });
+        }
+        
+        function makeChoice(choice) {
+            // Store path information
+            if (choice.path.startsWith('startingPoint')) {
+                gameState.path.startingPoint = choice.path;
+            } else if (choice.path.startsWith('conflict')) {
+                gameState.path.conflict = choice.path;
+            }
+            
+            // Go to next scene
+            gameState.currentScene = choice.nextScene;
+            loadScene(gameState.currentScene);
+        }
+        
+        function advanceDialogue(event) {
+            // Ignore clicks on choice buttons
+            if (gameState.showingChoices && !event.target.classList.contains('choice-btn')) {
+                return;
+            }
+            
+            const scene = gameContent.scenes[gameState.currentScene];
+            
+            // If showing choices, ignore clicks outside buttons
+            if (gameState.showingChoices) {
+                return;
+            }
+            
+            // Check if there are more dialogues
+            if (gameState.dialogueIndex < scene.dialogues.length - 1) {
+                gameState.dialogueIndex++;
+                showDialogue();
+            } else if (scene.choices) {
+                // Show choices if this is the last dialogue
+                showChoices();
+            } else if (scene.ending) {
+                // Show ending
+                showEnding(scene.ending);
+            }
+            
+            // Update progress
+            updateProgress();
+        }
+        
+        function showEnding(ending) {
+            gameScreen.classList.add('hidden');
+            gameScreen.classList.remove('flex');
+            endingScreen.classList.remove('hidden');
+            
+            // Update ending content
+            endingTitle.textContent = ending.title;
+            endingDescription.textContent = ending.description;
+            endingPath.textContent = ending.path;
+            
+            // Animate ending card
+            setTimeout(() => {
+                endingCard.classList.add('show');
+            }, 500);
+        }
+        
+        function updateProgress() {
+            const scene = gameContent.scenes[gameState.currentScene];
+            const totalDialogues = scene.dialogues.length;
+            const progress = ((gameState.dialogueIndex + 1) / totalDialogues) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94fa3db0472b329e',t:'MTc0OTkwODQ0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" src="./saved_resource(1).html"></iframe>
+
+</body></html>
